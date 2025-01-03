@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIT ADT University - School of Computing Timetables</title>
+ 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Favicon -->
+    <link rel="icon" href="https://mituniversity.ac.in/assets_web/images/favicon.png" type="image/png">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        
+        body {
+            
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #ecebef, #fdfffe);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        .navbar {
+           background-color: rgba(66, 5, 126, 0.9);
+           padding: 15px 30px;
+           
+        }
+
+        .navbar-brand img {
+            max-height: 60px;
+            transition: transform 0.3s ease;
+        }
+        .navbar-brand img:hover {
+             transform: scale(1.1);
+        }
+        .nav-link {
+            color: #fff !important;
+            font-weight: bold;
+        }
+        .navbar-nav .nav-link {
+            color: #fff !important;
+            font-weight: 500;
+            font-size: 1.1em;
+            transition: color 0.3s ease;
+        }
+        .navbar-nav .nav-link:hover {
+         color: #ffa68f !important;
+         
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 10px;
+            justify-content: center; 
+        }
+
+        .social-icon {
+            font-size: 18px;
+            color: #060606;
+            background-color: #eff3f5;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s, background-color 0.3s, color 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-icon:hover {
+            transform: rotate(360deg) scale(1.2);
+            background-color: #f7916c;
+            color: #f0edf4;
+        }
+
+        .social-icon::before {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #e78814;
+            z-index: -1;
+            transition: top 0.3s;
+        }
+
+        .social-icon:hover::before {
+            top: 0;
+        }
+
+
+        .main-content {
+            text-align: center;
+            padding: 40px 20px;
+            color: #450777;
+            flex: 1;
+        }
+
+        .main-content h1 {
+            font-size: 2.5em;
+            color: #450777;
+            margin-bottom: 10px;
+        }
+
+        .main-content h2 {
+            font-size: 2em;
+            margin-bottom: 30px;
+        }
+        .card i {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+        .card {
+            border-radius: 15px;
+            background: linear-gradient(135deg, #350162, #9809a5);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            min-height: 200px;
+            justify-content: center;
+            flex-direction: column;
+            margin-top: 40px;
+            position: relative;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            background: linear-gradient(135deg, #59025e, #570af1);
+        
+        }
+        .card-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            
+        }
+
+        .card {
+            background-color: rgba(231, 8, 231, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(203, 13, 184, 0.2);
+            transition: transform 0.3s ease;
+            text-align: center;
+            cursor: pointer;
+            color: #f8f2f2;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            background-color: rgba(151, 8, 234, 0.2);
+        }
+
+        .card h3 {
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+         
+        .footer {
+            background-color: rgba(66, 5, 126, 0.9);
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .footer p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: bold;
+        }
+
+        .back-button {
+            display: none;
+            margin-bottom: 20px;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+            color: white;
+            background-color: rgba(66, 5, 126, 0.9);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 16px;
+            align-items: center;
+            justify-content: center;
+            width: fit-content;            
+        }
+        .back-button:hover {
+            background-color: #f8967e;
+        }
+        @media (max-width: 767px) {
+    .navbar-brand {
+        flex-grow: 1;
+        text-align: center;
+    }
+
+    .social-icons {
+        display: flex;
+        gap: 10px;
+        justify-content: center; 
+        margin-top: 10px; 
+    }
+
+    .navbar-nav {
+        text-align: center;
+    }
+
+    .navbar-toggler {
+        margin-left: auto;
+    }
+
+    .navbar-collapse {
+        background-color: rgba(66, 5, 126, 0.9);
+        padding: 10px;
+    }
+
+    .navbar-nav {
+        flex-direction: column;
+    }
+
+    .nav-item {
+        margin-bottom: 10px;
+    }
+
+    .main-content {
+        padding: 40px 20px;
+    }
+}
+
+
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <!-- Logo -->
+            <a class="navbar-brand" href="#">
+                <img src="https://mituniversity.ac.in/assets_web/images/LOGO2.png" alt="MIT ADT University Logo">
+            </a>
+            <!-- Toggler/collapsible Button -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent"
+                aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <!-- Navbar Links and Social Icons -->
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav ml-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="home.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://mituniversity.ac.in/about-us/">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="manag.html">Management Team</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="demo.html">Time Table</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="infra.html">Infrastructure</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="circular.html">Circular</a>
+                    </li>
+                    <!-- Social Icons -->
+                    <li class="nav-item">
+                        <div class="social-icons d-flex">
+                            <a href="https://www.facebook.com/mitadtuniversity" target="_blank" class="social-icon">
+                                <i class="fab fa-facebook"></i>
+                            </a>
+                            <a href="https://www.instagram.com/accounts/login/?next=/mitadtuniversity/" target="_blank"
+                                class="social-icon">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="https://www.youtube.com/c/MITADTUniversityPune" target="_blank" class="social-icon">
+                                <i class="fab fa-youtube"></i>
+                            </a>
+                            <a href="https://www.linkedin.com/school/mit-adt-university/" target="_blank"
+                                class="social-icon">
+                                <i class="fab fa-linkedin"></i>
+                            </a>
+                            <a href="https://twitter.com/mitadtuniv" target="_blank" class="social-icon">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                        </div>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Section -->
+    <div class="main-content">
+        <h1>MIT-ADT School of Computing</h1>
+        <h2>Department of Computer Science & Engineering Time Table</h2>
+    
+
+        <!-- Back Button -->
+        <button  class="btn btn-primary back-button" id="back-button" onclick="goBack()"><i class="fas fa-arrow-left"></i></button> 
+            
+        </button>
+
+        <div class="card-group" id="main-cards">
+            <div class="card" onclick="showPrograms()">
+                <i class="fas fa-chalkboard-teacher"></i>
+                <h3>Class Wise TT</h3>                
+            </div>
+            <div class="card" onclick="showIndividualTT()">
+                <i class="fas fa-user"></i>
+                <h3>Individual TT</h3>
+            </div>
+            <div class="card" onclick="showLabWiseTT()">
+                <i class="fas fa-laptop"></i>
+                <h3>Lab Wise TT</h3>
+            </div>
+            <div class="card" onclick="showClassroomWiseTT()">
+                <i class="fas fa-building"></i>
+                <h3>Classroom Wise TT</h3>
+            </div>
+        </div>
+
+        <!-- Additional Cards and Dropdown -->
+        <div id="program-cards" class="card-group" style="display: none;">
+            <div class="card" onclick="showBTechYears()">
+                <i class="fas fa-graduation-cap"></i>
+                <h3>B.Tech</h3>
+            </div>
+            <div class="card" onclick="showMTechYears()">
+                <i class="fas fa-graduation-cap"></i>
+                <h3>M.Tech</h3>
+            </div>
+            <div class="card" onclick="showMSCYears()">
+                <i class="fas fa-graduation-cap"></i>
+                <h3>M.Sc</h3>
+            </div>
+        </div>
+
+        <div id="btech-cards" class="card-group" style="display: none;">
+            <div class="card" onclick="showSYBTechDropdown()">
+                <i class="fas fa-graduation-cap"></i>
+                <h3>SY B.Tech</h3>
+            </div>
+            <div class="card" onclick="showTYBTechDropdown()">
+                <i class="fas fa-graduation-cap"></i>
+                <h3>TY B.Tech</h3>
+            </div>
+            <div class="card" onclick="showLYBTechDropdown()">
+                <i class="fas fa-graduation-cap"></i>
+                <h3>LY B.Tech</h3>
+            </div>
+        </div>
+
+        <div id="mtech-cards" class="card-group" style="display: none;">
+            <div class="card" onclick="showFYMTechDropdown()">
+                <i class="fas fa-graduation-cap"></i>
+                <h3>FY M.Tech</h3>
+            </div>
+            <div class="card" onclick="showSYMTechDropdown()">
+                <i class="fas fa-graduation-cap"></i>
+                <h3>LY M.Tech</h3>
+            </div>
+        </div>
+
+        <div id="msc-cards" class="card-group" style="display: none;">
+            <div class="card" onclick="showFYMSCDropdown()">
+                <i class="fas fa-graduation-cap"></i>
+                <h3>FY M.Sc</h3>
+            </div>
+            <div class="card" onclick="showSYMSCDropdown()">
+                <i class="fas fa-graduation-cap"></i>
+                <h3>LY M.Sc</h3>
+            </div>
+        </div>
+
+        <!-- Dropdowns for B.Tech, M.Tech, M.Sc., Lab Wise, and Classroom Wise -->
+        <div id="sybtech-dropdown" style="display: none;">
+            <select class="form-control" onchange="handleDropdownChange(this)">
+                <option value="">Select Division</option>
+                <option value="">SY-1</option>
+                <option value="">SY-2</option>
+                <option value="">SY-3</option>
+                <option value="">SY-4</option>
+                <option value="https://docs.google.com/spreadsheets/d/1hZsa9udrTIK9Psl7zJP9xMz3Cp6bDuT8/edit?gid=1629231724#gid=1629231724">SY-5</option>
+                <option value="https://docs.google.com/spreadsheets/d/1hZsa9udrTIK9Psl7zJP9xMz3Cp6bDuT8/edit?gid=1131522443#gid=1131522443">SY-6</option>
+                <option value="https://docs.google.com/spreadsheets/d/1hZsa9udrTIK9Psl7zJP9xMz3Cp6bDuT8/edit?gid=846664437#gid=846664437">SY-7</option>
+                <option value="https://docs.google.com/spreadsheets/d/1hZsa9udrTIK9Psl7zJP9xMz3Cp6bDuT8/edit?gid=1939930272#gid=1939930272">SY-8</option>
+                <option value="https://docs.google.com/spreadsheets/d/1hZsa9udrTIK9Psl7zJP9xMz3Cp6bDuT8/edit?gid=1668364294#gid=1668364294">SY-9</option>
+                <option value="https://docs.google.com/spreadsheets/d/1hZsa9udrTIK9Psl7zJP9xMz3Cp6bDuT8/edit?gid=464516261#gid=464516261">SY-10</option>
+                <option value="https://docs.google.com/spreadsheets/d/1hZsa9udrTIK9Psl7zJP9xMz3Cp6bDuT8/edit?gid=975434101#gid=975434101">SY-11</option>
+                <option value="https://docs.google.com/spreadsheets/d/1hZsa9udrTIK9Psl7zJP9xMz3Cp6bDuT8/edit?gid=1034207055#gid=1034207055">SY-12</option>
+                <option value="https://docs.google.com/spreadsheets/d/1hZsa9udrTIK9Psl7zJP9xMz3Cp6bDuT8/edit?gid=70127721#gid=70127721">SY-13</option>
+                <option value="https://docs.google.com/spreadsheets/d/1hZsa9udrTIK9Psl7zJP9xMz3Cp6bDuT8/edit?gid=343072837#gid=343072837">SY-14</option>
+                <option value="https://docs.google.com/spreadsheets/d/1hZsa9udrTIK9Psl7zJP9xMz3Cp6bDuT8/edit?gid=1121078847#gid=1121078847">SY-15</option>
+                <option value="https://docs.google.com/spreadsheets/d/1hZsa9udrTIK9Psl7zJP9xMz3Cp6bDuT8/edit?gid=1544720923#gid=1544720923">SY-16</option>
+                <option value="https://docs.google.com/spreadsheets/d/1hZsa9udrTIK9Psl7zJP9xMz3Cp6bDuT8/edit?gid=1619377996#gid=1619377996">SY-17</option>
+                <option value="https://docs.google.com/spreadsheets/d/1hZsa9udrTIK9Psl7zJP9xMz3Cp6bDuT8/edit?gid=1048521910#gid=1048521910">SY-18</option>
+                <option value="https://docs.google.com/spreadsheets/d/1hZsa9udrTIK9Psl7zJP9xMz3Cp6bDuT8/edit?gid=1137244727#gid=1137244727">SY-19</option>
+                <option value="https://docs.google.com/spreadsheets/d/1hZsa9udrTIK9Psl7zJP9xMz3Cp6bDuT8/edit?gid=417190290#gid=417190290">SY-20</option>
+                <option value="https://docs.google.com/spreadsheets/d/1hZsa9udrTIK9Psl7zJP9xMz3Cp6bDuT8/edit?gid=1847467617#gid=1847467617">SY-21</option>
+                <option value="https://docs.google.com/spreadsheets/d/1hZsa9udrTIK9Psl7zJP9xMz3Cp6bDuT8/edit?gid=284738312#gid=284738312">SY-22</option>
+                <option value="https://docs.google.com/spreadsheets/d/1hZsa9udrTIK9Psl7zJP9xMz3Cp6bDuT8/edit?gid=1793179810#gid=1793179810">NEW SY21</option>
+                <option value="https://docs.google.com/spreadsheets/d/1hZsa9udrTIK9Psl7zJP9xMz3Cp6bDuT8/edit?gid=1862661726#gid=1862661726">NEW SY22</option>
+            </select>
+        </div>
+
+        <div id="tybtech-dropdown" style="display: none;">
+            <select class="form-control" onchange="handleDropdownChange(this)">
+                <option value="">Select Division</option>
+                <option value="https://docs.google.com/spreadsheets/d/e/2PACX-1vTgWpkd9fI5vcrSzpdvM9OzeXE4m8RqcNcaND-9mH6IjyWXZTWsCQq2bzjOixE_hA/pubhtml?gid=2143968949&single=true">TY-1</option>
+                <option value="https://docs.google.com/spreadsheets/d/e/2PACX-1vTgWpkd9fI5vcrSzpdvM9OzeXE4m8RqcNcaND-9mH6IjyWXZTWsCQq2bzjOixE_hA/pubhtml?gid=614058064&single=true">TY-2</option>
+                <option value="https://docs.google.com/spreadsheets/d/e/2PACX-1vTgWpkd9fI5vcrSzpdvM9OzeXE4m8RqcNcaND-9mH6IjyWXZTWsCQq2bzjOixE_hA/pubhtml?gid=657951450&single=true">TY-3</option>
+                <option value="https://docs.google.com/spreadsheets/d/e/2PACX-1vTgWpkd9fI5vcrSzpdvM9OzeXE4m8RqcNcaND-9mH6IjyWXZTWsCQq2bzjOixE_hA/pubhtml?gid=1450535117&single=true">TY-4</option>
+                <option value="https://docs.google.com/spreadsheets/d/e/2PACX-1vTgWpkd9fI5vcrSzpdvM9OzeXE4m8RqcNcaND-9mH6IjyWXZTWsCQq2bzjOixE_hA/pubhtml?gid=625541331&single=true">TY-5</option>
+                <option value="https://docs.google.com/spreadsheets/d/e/2PACX-1vTgWpkd9fI5vcrSzpdvM9OzeXE4m8RqcNcaND-9mH6IjyWXZTWsCQq2bzjOixE_hA/pubhtml?gid=925924885&single=true">TY-6</option>
+                <option value="https://docs.google.com/spreadsheets/d/e/2PACX-1vTgWpkd9fI5vcrSzpdvM9OzeXE4m8RqcNcaND-9mH6IjyWXZTWsCQq2bzjOixE_hA/pubhtml?gid=1186385171&single=true">TY-7</option>
+                <option value="https://docs.google.com/spreadsheets/d/e/2PACX-1vTgWpkd9fI5vcrSzpdvM9OzeXE4m8RqcNcaND-9mH6IjyWXZTWsCQq2bzjOixE_hA/pubhtml?gid=309846782&single=true">TY-8</option>
+                <option value="https://docs.google.com/spreadsheets/d/e/2PACX-1vTgWpkd9fI5vcrSzpdvM9OzeXE4m8RqcNcaND-9mH6IjyWXZTWsCQq2bzjOixE_hA/pubhtml?gid=1020130754&single=true">TY-9</option>
+                <option value="https://docs.google.com/spreadsheets/d/e/2PACX-1vTgWpkd9fI5vcrSzpdvM9OzeXE4m8RqcNcaND-9mH6IjyWXZTWsCQq2bzjOixE_hA/pubhtml?gid=161226127&single=true">TY-10</option>
+                <option value="https://docs.google.com/spreadsheets/d/e/2PACX-1vTgWpkd9fI5vcrSzpdvM9OzeXE4m8RqcNcaND-9mH6IjyWXZTWsCQq2bzjOixE_hA/pubhtml?gid=1979261881&single=true">TY-11</option>
+                <option value="https://docs.google.com/spreadsheets/d/e/2PACX-1vTgWpkd9fI5vcrSzpdvM9OzeXE4m8RqcNcaND-9mH6IjyWXZTWsCQq2bzjOixE_hA/pubhtml?gid=399179728&single=true">TY-12</option>
+                <option value="https://docs.google.com/spreadsheets/d/e/2PACX-1vTgWpkd9fI5vcrSzpdvM9OzeXE4m8RqcNcaND-9mH6IjyWXZTWsCQq2bzjOixE_hA/pubhtml?gid=1443970124&single=true">TY-13</option>
+                <option value="https://docs.google.com/spreadsheets/d/e/2PACX-1vTgWpkd9fI5vcrSzpdvM9OzeXE4m8RqcNcaND-9mH6IjyWXZTWsCQq2bzjOixE_hA/pubhtml?gid=327087433&single=true">TY-14</option>
+                <option value="https://docs.google.com/spreadsheets/d/e/2PACX-1vTgWpkd9fI5vcrSzpdvM9OzeXE4m8RqcNcaND-9mH6IjyWXZTWsCQq2bzjOixE_hA/pubhtml?gid=1468200817&single=true">TY-15</option>
+                <option value="https://docs.google.com/spreadsheets/d/e/2PACX-1vTgWpkd9fI5vcrSzpdvM9OzeXE4m8RqcNcaND-9mH6IjyWXZTWsCQq2bzjOixE_hA/pubhtml?gid=496003520&single=true">TY-16</option>
+                <option value="https://docs.google.com/spreadsheets/d/e/2PACX-1vTgWpkd9fI5vcrSzpdvM9OzeXE4m8RqcNcaND-9mH6IjyWXZTWsCQq2bzjOixE_hA/pubhtml?gid=1581859539&single=true">TY-17</option>
+                <option value="https://docs.google.com/spreadsheets/d/e/2PACX-1vTgWpkd9fI5vcrSzpdvM9OzeXE4m8RqcNcaND-9mH6IjyWXZTWsCQq2bzjOixE_hA/pubhtml?gid=1332405037&single=true">TY-18</option>
+                
+
+            </select>
+        </div>
+
+        <div id="lybtech-dropdown" style="display: none;">
+            <select class="form-control" onchange="handleDropdownChange(this)">
+                <option value="">Select Division</option>
+                <option value="https://docs.google.com/spreadsheets/d/e/2PACX-1vQYiiKcgjWLThvOvCbOC5BcyXDA89nKBxYBwfwGZZv67rnQUz9Q14wk_Ewa_3xsFQ/pubhtml?gid=2045459443&single=true">LY-1</option>
+                <option value="https://docs.google.com/spreadsheets/d/e/2PACX-1vQYiiKcgjWLThvOvCbOC5BcyXDA89nKBxYBwfwGZZv67rnQUz9Q14wk_Ewa_3xsFQ/pubhtml?gid=286913190&single=true">LY-2</option>
+                <option value="https://docs.google.com/spreadsheets/d/e/2PACX-1vQYiiKcgjWLThvOvCbOC5BcyXDA89nKBxYBwfwGZZv67rnQUz9Q14wk_Ewa_3xsFQ/pubhtml?gid=329888033&single=true">LY-3</option>
+                <option value="https://docs.google.com/spreadsheets/d/e/2PACX-1vQYiiKcgjWLThvOvCbOC5BcyXDA89nKBxYBwfwGZZv67rnQUz9Q14wk_Ewa_3xsFQ/pubhtml?gid=564583294&single=true">LY-4</option>
+                <option value="https://docs.google.com/spreadsheets/d/e/2PACX-1vQYiiKcgjWLThvOvCbOC5BcyXDA89nKBxYBwfwGZZv67rnQUz9Q14wk_Ewa_3xsFQ/pubhtml?gid=1629231724&single=true">LY-5</option>
+                <option value="https://docs.google.com/spreadsheets/d/e/2PACX-1vQYiiKcgjWLThvOvCbOC5BcyXDA89nKBxYBwfwGZZv67rnQUz9Q14wk_Ewa_3xsFQ/pubhtml?gid=1131522443&single=true">LY-6</option>
+                <option value="https://docs.google.com/spreadsheets/d/e/2PACX-1vQYiiKcgjWLThvOvCbOC5BcyXDA89nKBxYBwfwGZZv67rnQUz9Q14wk_Ewa_3xsFQ/pubhtml?gid=846664437&single=true">LY-7</option>
+                <option value="https://docs.google.com/spreadsheets/d/e/2PACX-1vQYiiKcgjWLThvOvCbOC5BcyXDA89nKBxYBwfwGZZv67rnQUz9Q14wk_Ewa_3xsFQ/pubhtml?gid=1939930272&single=true">LY-8</option>
+                <option value="https://docs.google.com/spreadsheets/d/e/2PACX-1vQYiiKcgjWLThvOvCbOC5BcyXDA89nKBxYBwfwGZZv67rnQUz9Q14wk_Ewa_3xsFQ/pubhtml?gid=1668364294&single=true">LY-9</option>
+                <option value="https://docs.google.com/spreadsheets/d/e/2PACX-1vQYiiKcgjWLThvOvCbOC5BcyXDA89nKBxYBwfwGZZv67rnQUz9Q14wk_Ewa_3xsFQ/pubhtml?gid=464516261&single=true">LY-10</option>
+                <option value="https://docs.google.com/spreadsheets/d/e/2PACX-1vQYiiKcgjWLThvOvCbOC5BcyXDA89nKBxYBwfwGZZv67rnQUz9Q14wk_Ewa_3xsFQ/pubhtml?gid=975434101&single=true">LY-11</option>
+                <option value="https://docs.google.com/spreadsheets/d/e/2PACX-1vQYiiKcgjWLThvOvCbOC5BcyXDA89nKBxYBwfwGZZv67rnQUz9Q14wk_Ewa_3xsFQ/pubhtml?gid=1034207055&single=true">LY-12</option>
+                <option value="https://docs.google.com/spreadsheets/d/e/2PACX-1vS0yIaIOUWNhIHpU-GxFUVTvJWWebRtidDJuMvJa6vLs6Bbv_Gqt7RDzLvSqvtzUA/pubhtml?gid=577751917&single=true">LY NS-2018 Pattern</option>
+                <option value="https://docs.google.com/spreadsheets/d/e/2PACX-1vSBRPUnGr-WTSSK45CN2FvoIcwWRM1uV16t1odSLLjM-oUMG-CustC-k8EMvA8VPQ/pubhtml?gid=577751917&single=true">LY ISA-2018 Pattern</option>
+            </select>
+        </div>
+
+        <div id="fymtech-dropdown" style="display: none;">
+            <select class="form-control" onchange="handleDropdownChange(this)">
+                <option value="">Select Division</option>
+                <option value="https://docs.google.com/spreadsheets/d/1SepmL-UhiA4OLOakC1bnVUA_Z29n41Bn/edit?gid=709090730#gid=709090730">FY M.Tech</option>
+                
+            </select>
+        </div>
+
+        <div id="symtech-dropdown" style="display: none;">
+            <select class="form-control" onchange="handleDropdownChange(this)">
+                <option value="">Select Division</option>
+                
+                <option value="https://docs.google.com/spreadsheets/d/1SepmL-UhiA4OLOakC1bnVUA_Z29n41Bn/edit?gid=1248534959#gid=1248534959">LY M.Tech</option>
+            </select>
+        </div>
+
+        <div id="fymsc-dropdown" style="display: none;">
+            <select class="form-control" onchange="handleDropdownChange(this)">
+                <option value="">Select Division</option>
+                <option value="https://docs.google.com/spreadsheets/d/1SepmL-UhiA4OLOakC1bnVUA_Z29n41Bn/edit?gid=1900641521#gid=1900641521">FY M.Sc</option>
+                
+            </select>
+        </div>
+
+        <div id="symsc-dropdown" style="display: none;">
+            <select class="form-control" onchange="handleDropdownChange(this)">
+                <option value="">Select Division</option>
+                <option value="https://docs.google.com/spreadsheets/d/1SepmL-UhiA4OLOakC1bnVUA_Z29n41Bn/edit?gid=1164196933#gid=1164196933">LY M.Sc</option>
+                
+            </select>
+        </div>
+
+        <!-- Additional Dropdowns for Lab Wise and Classroom Wise -->
+        <div id="labwise-dropdown" style="display: none;">
+            <select class="form-control" onchange="handleDropdownChange(this)">
+                <option value="">Select Lab</option>
+                <option value="https://docs.google.com/spreadsheets/d/1pkx0WVJl3D3GwkpcsTTo3_0LIAAE5aEU/edit?gid=873191040#gid=873191040">N-511</option>
+                <option value="https://docs.google.com/spreadsheets/d/1pkx0WVJl3D3GwkpcsTTo3_0LIAAE5aEU/edit?gid=1127213725#gid=1127213725">N-512</option>
+                <option value="https://docs.google.com/spreadsheets/d/1pkx0WVJl3D3GwkpcsTTo3_0LIAAE5aEU/edit?gid=1750574654#gid=1750574654">N-513</option>
+                <option value="https://docs.google.com/spreadsheets/d/1pkx0WVJl3D3GwkpcsTTo3_0LIAAE5aEU/edit?gid=1627648873#gid=1627648873">N-519</option>
+                <option value="https://docs.google.com/spreadsheets/d/1pkx0WVJl3D3GwkpcsTTo3_0LIAAE5aEU/edit?gid=471809117#gid=471809117">N-521</option>
+                <option value="https://docs.google.com/spreadsheets/d/1pkx0WVJl3D3GwkpcsTTo3_0LIAAE5aEU/edit?gid=1142795161#gid=1142795161">N-606</option>
+                <option value="https://docs.google.com/spreadsheets/d/1pkx0WVJl3D3GwkpcsTTo3_0LIAAE5aEU/edit?gid=502838929#gid=502838929">N-608</option>
+                <option value="https://docs.google.com/spreadsheets/d/1pkx0WVJl3D3GwkpcsTTo3_0LIAAE5aEU/edit?gid=1515315538#gid=1515315538">S-219</option>
+                <option value="https://docs.google.com/spreadsheets/d/1pkx0WVJl3D3GwkpcsTTo3_0LIAAE5aEU/edit?gid=1653960863#gid=1653960863">S-221</option>
+                <option value="https://docs.google.com/spreadsheets/d/1pkx0WVJl3D3GwkpcsTTo3_0LIAAE5aEU/edit?gid=1761887734#gid=1761887734">S-406</option>
+                <option value="https://docs.google.com/spreadsheets/d/1pkx0WVJl3D3GwkpcsTTo3_0LIAAE5aEU/edit?gid=1912713458#gid=1912713458">S-407</option>
+                <option value="https://docs.google.com/spreadsheets/d/1pkx0WVJl3D3GwkpcsTTo3_0LIAAE5aEU/edit?gid=192171131#gid=192171131">S-408</option>
+                <option value="https://docs.google.com/spreadsheets/d/1pkx0WVJl3D3GwkpcsTTo3_0LIAAE5aEU/edit?gid=814905100#gid=814905100">S-414</option>
+                <option value="https://docs.google.com/spreadsheets/d/1pkx0WVJl3D3GwkpcsTTo3_0LIAAE5aEU/edit?gid=1495272139#gid=1495272139">S-416</option>
+                <option value="https://docs.google.com/spreadsheets/d/1pkx0WVJl3D3GwkpcsTTo3_0LIAAE5aEU/edit?gid=1527509777#gid=1527509777">S-417</option>
+                <option value="https://docs.google.com/spreadsheets/d/1pkx0WVJl3D3GwkpcsTTo3_0LIAAE5aEU/edit?gid=1279203208#gid=1279203208">S-419</option>
+                <option value="https://docs.google.com/spreadsheets/d/1pkx0WVJl3D3GwkpcsTTo3_0LIAAE5aEU/edit?gid=295626954#gid=295626954">S-421</option>
+                <option value="https://docs.google.com/spreadsheets/d/1pkx0WVJl3D3GwkpcsTTo3_0LIAAE5aEU/edit?gid=1204432230#gid=1204432230">S-505</option>
+                <option value="https://docs.google.com/spreadsheets/d/1pkx0WVJl3D3GwkpcsTTo3_0LIAAE5aEU/edit?gid=1986524851#gid=1986524851">S-506</option>
+                <option value="https://docs.google.com/spreadsheets/d/1pkx0WVJl3D3GwkpcsTTo3_0LIAAE5aEU/edit?gid=1562883408#gid=1562883408">S-507</option>
+                <option value="https://docs.google.com/spreadsheets/d/1pkx0WVJl3D3GwkpcsTTo3_0LIAAE5aEU/edit?gid=660095991#gid=660095991">S-508</option>
+                <option value="https://docs.google.com/spreadsheets/d/1pkx0WVJl3D3GwkpcsTTo3_0LIAAE5aEU/edit?gid=439332353#gid=439332353">S-514</option>
+                <option value="https://docs.google.com/spreadsheets/d/1pkx0WVJl3D3GwkpcsTTo3_0LIAAE5aEU/edit?gid=1503726268#gid=1503726268">S-516</option>
+                <option value="https://docs.google.com/spreadsheets/d/1pkx0WVJl3D3GwkpcsTTo3_0LIAAE5aEU/edit?gid=1584051431#gid=1584051431">S-517</option>
+                <option value="https://docs.google.com/spreadsheets/d/1pkx0WVJl3D3GwkpcsTTo3_0LIAAE5aEU/edit?gid=1201704683#gid=1201704683">S-605</option>
+                <option value="https://docs.google.com/spreadsheets/d/1pkx0WVJl3D3GwkpcsTTo3_0LIAAE5aEU/edit?gid=27922456#gid=27922456">S-607</option>
+                <option value="https://docs.google.com/spreadsheets/d/1pkx0WVJl3D3GwkpcsTTo3_0LIAAE5aEU/edit?gid=1113994476#gid=1113994476">S-608</option>
+                <option value="https://docs.google.com/spreadsheets/d/1pkx0WVJl3D3GwkpcsTTo3_0LIAAE5aEU/edit?gid=651345109#gid=651345109">S-617</option>
+                <option value="https://docs.google.com/spreadsheets/d/1pkx0WVJl3D3GwkpcsTTo3_0LIAAE5aEU/edit?gid=1850509386#gid=1850509386">S-618</option>
+                <option value="https://docs.google.com/spreadsheets/d/1pkx0WVJl3D3GwkpcsTTo3_0LIAAE5aEU/edit?gid=34841696#gid=34841696">S-619</option>
+                <option value="https://docs.google.com/spreadsheets/d/1pkx0WVJl3D3GwkpcsTTo3_0LIAAE5aEU/edit?gid=1375938215#gid=1375938215">S-620</option>
+                <option value="https://docs.google.com/spreadsheets/d/1pkx0WVJl3D3GwkpcsTTo3_0LIAAE5aEU/edit?gid=2044672272#gid=2044672272">S-621</option>
+            </select>
+        </div>
+
+        <div id="classroomwise-dropdown" style="display: none;">
+            <select class="form-control" onchange="handleDropdownChange(this)">
+                <option value="">Select Classroom</option>
+                <option value="https://docs.google.com/spreadsheets/d/1peD9g7OWbPxbXs1SnbqJq9UO9tvTruli/edit?gid=531710025#gid=531710025">N-505</option>
+                <option value="https://docs.google.com/spreadsheets/d/1peD9g7OWbPxbXs1SnbqJq9UO9tvTruli/edit?gid=564740156#gid=564740156">N-506</option>
+                <option value="https://docs.google.com/spreadsheets/d/1peD9g7OWbPxbXs1SnbqJq9UO9tvTruli/edit?gid=1068799193#gid=1068799193">N-507</option>
+                <option value="https://docs.google.com/spreadsheets/d/1peD9g7OWbPxbXs1SnbqJq9UO9tvTruli/edit?gid=1476094746#gid=1476094746">N-508</option>
+                <option value="https://docs.google.com/spreadsheets/d/1peD9g7OWbPxbXs1SnbqJq9UO9tvTruli/edit?gid=2011887481#gid=2011887481">N-509</option>
+                <option value="https://docs.google.com/spreadsheets/d/1peD9g7OWbPxbXs1SnbqJq9UO9tvTruli/edit?gid=1073155487#gid=1073155487">N-510</option>
+                <option value="https://docs.google.com/spreadsheets/d/1peD9g7OWbPxbXs1SnbqJq9UO9tvTruli/edit?gid=537452356#gid=537452356">N-515</option>
+                <option value="https://docs.google.com/spreadsheets/d/1peD9g7OWbPxbXs1SnbqJq9UO9tvTruli/edit?gid=2083945474#gid=2083945474">N-517</option>
+                <option value="https://docs.google.com/spreadsheets/d/1peD9g7OWbPxbXs1SnbqJq9UO9tvTruli/edit?gid=200287989#gid=200287989">S-111</option>
+                <option value="https://docs.google.com/spreadsheets/d/1peD9g7OWbPxbXs1SnbqJq9UO9tvTruli/edit?gid=1270642423#gid=1270642423">S115</option>
+                <option value="https://docs.google.com/spreadsheets/d/1peD9g7OWbPxbXs1SnbqJq9UO9tvTruli/edit?gid=1132862494#gid=1132862494">S120</option>
+                <option value="https://docs.google.com/spreadsheets/d/1peD9g7OWbPxbXs1SnbqJq9UO9tvTruli/edit?gid=1635655291#gid=1635655291">S210</option>
+                <option value="https://docs.google.com/spreadsheets/d/1peD9g7OWbPxbXs1SnbqJq9UO9tvTruli/edit?gid=186494067#gid=186494067">S218</option>
+                <option value="https://docs.google.com/spreadsheets/d/1peD9g7OWbPxbXs1SnbqJq9UO9tvTruli/edit?gid=1368021518#gid=1368021518">S220</option>
+                <option value="https://docs.google.com/spreadsheets/d/1peD9g7OWbPxbXs1SnbqJq9UO9tvTruli/edit?gid=121012441#gid=121012441">S403</option>
+                <option value="https://docs.google.com/spreadsheets/d/1peD9g7OWbPxbXs1SnbqJq9UO9tvTruli/edit?gid=1082961175#gid=1082961175">S409</option>
+                <option value="https://docs.google.com/spreadsheets/d/1peD9g7OWbPxbXs1SnbqJq9UO9tvTruli/edit?gid=211820701#gid=211820701">S410</option>
+                <option value="https://docs.google.com/spreadsheets/d/1peD9g7OWbPxbXs1SnbqJq9UO9tvTruli/edit?gid=335497310#gid=335497310">S412 TUT ROOM</option>
+                <option value="https://docs.google.com/spreadsheets/d/1peD9g7OWbPxbXs1SnbqJq9UO9tvTruli/edit?gid=1642458826#gid=1642458826">S418</option>
+                <option value="https://docs.google.com/spreadsheets/d/1peD9g7OWbPxbXs1SnbqJq9UO9tvTruli/edit?gid=700526292#gid=700526292">S420</option>
+                <option value="https://docs.google.com/spreadsheets/d/1peD9g7OWbPxbXs1SnbqJq9UO9tvTruli/edit?gid=425949471#gid=425949471">S503</option>
+                <option value="https://docs.google.com/spreadsheets/d/1peD9g7OWbPxbXs1SnbqJq9UO9tvTruli/edit?gid=738698309#gid=738698309">S509</option>
+                <option value="https://docs.google.com/spreadsheets/d/1peD9g7OWbPxbXs1SnbqJq9UO9tvTruli/edit?gid=36118069#gid=36118069">S510</option>
+                <option value="https://docs.google.com/spreadsheets/d/1peD9g7OWbPxbXs1SnbqJq9UO9tvTruli/edit?gid=1595809277#gid=1595809277">S515</option>
+                <option value="https://docs.google.com/spreadsheets/d/1peD9g7OWbPxbXs1SnbqJq9UO9tvTruli/edit?gid=509026389#gid=509026389">S518</option>
+                <option value="https://docs.google.com/spreadsheets/d/1peD9g7OWbPxbXs1SnbqJq9UO9tvTruli/edit?gid=86155813#gid=86155813">S519</option>
+                <option value="https://docs.google.com/spreadsheets/d/1peD9g7OWbPxbXs1SnbqJq9UO9tvTruli/edit?gid=923920496#gid=923920496">S520</option>
+                <option value="https://docs.google.com/spreadsheets/d/1peD9g7OWbPxbXs1SnbqJq9UO9tvTruli/edit?gid=778964898#gid=778964898">S521</option>
+                <option value="https://docs.google.com/spreadsheets/d/1peD9g7OWbPxbXs1SnbqJq9UO9tvTruli/edit?gid=473481299#gid=473481299">S603</option>
+                <option value="https://docs.google.com/spreadsheets/d/1peD9g7OWbPxbXs1SnbqJq9UO9tvTruli/edit?gid=1296172799#gid=1296172799">S612 TUT ROOM</option>
+            </select>
+        </div>
+
+        <div id="faculty-dropdown" style="display: none;">
+            <select class="form-control" onchange="handleDropdownChange(this)">
+                <option value="">Select Faculty</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=686833007#gid=686833007">Prof. Aarti Pimpalkar</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1029974136#gid=1029974136">Prof. Abhishek Das</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=1294394105#gid=1294394105">Prof. Achyut Deshmukh</option>
+                <option value="https://docs.google.com/spreadsheets/d/1KbU23lg-RT1n_zuWGHfc5JS_IX5h60f-PGRbWeg0RjY/edit?gid=1426238227#gid=1426238227">Prof. Aditi Wangikar</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=439585563#gid=439585563">Prof. Aman Kamble</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=790929842#gid=790929842">Prof. Amit Dharnaik</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1305758762#gid=1305758762">Prof. Amit Uttarkar</option>
+                <option value="https://docs.google.com/spreadsheets/d/1KbU23lg-RT1n_zuWGHfc5JS_IX5h60f-PGRbWeg0RjY/edit?gid=614742566#gid=614742566">Prof. Amol Chincholkar</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1017233883#gid=1017233883">Prof. Amol Dande</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=2135758066#gid=2135758066">Prof. Anuja Chincholkar</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=52061637#gid=52061637">Prof. Anuja Gaikwad</option>
+                <option value="https://docs.google.com/spreadsheets/d/1KbU23lg-RT1n_zuWGHfc5JS_IX5h60f-PGRbWeg0RjY/edit?gid=1555308276#gid=1555308276">Prof. Arun Ghandat</option>
+                <option value="https://docs.google.com/spreadsheets/d/1KbU23lg-RT1n_zuWGHfc5JS_IX5h60f-PGRbWeg0RjY/edit?gid=390717045#gid=390717045">Prof. Avinash Ashok Utikar</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=564961204#gid=564961204">Prof. Babeetta Bhagat</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=285945367#gid=285945367">Prof. Bhagyashree Shendkar</option>
+                <option value="https://docs.google.com/spreadsheets/d/1KbU23lg-RT1n_zuWGHfc5JS_IX5h60f-PGRbWeg0RjY/edit?gid=1363447941#gid=1363447941">Prof. Bhushan Bhokse</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=1640635193#gid=1640635193">Prof. Chaitanya Garware</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=226468542#gid=226468542">Prof. Chhaya Mhaske</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=65429670#gid=65429670">Prof. Dattatray Kale</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1359719775#gid=1359719775">Prof. Deepa Mishra</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=640962025#gid=640962025">Prof. Deepali Lokare</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=745568317#gid=745568317">Prof. Dipak Naik</option>
+                <option value="https://docs.google.com/spreadsheets/d/1KbU23lg-RT1n_zuWGHfc5JS_IX5h60f-PGRbWeg0RjY/edit?gid=1285775715#gid=1285775715">Prof. Dr.Abhishek M. Dhore</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1265256881#gid=1265256881">Prof. Dr.Aditya Pai H</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1993475#gid=1993475">Prof. Dr.Aman Singh</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=765709025#gid=765709025">Prof. Dr.Amol Bhosle</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1566200311#gid=1566200311">Prof. Dr.Amreen Khan</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1871891508#gid=1871891508">Prof. Dr. Anant Nagesh Kaulage</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1332122065#gid=1332122065">Prof. Dr. Anuja R. Jadhav</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=952327616#gid=952327616">Prof. Dr. Anupama Budhewar</option>
+                <option value="https://docs.google.com/spreadsheets/d/1KbU23lg-RT1n_zuWGHfc5JS_IX5h60f-PGRbWeg0RjY/edit?gid=1216399622#gid=1216399622">Prof. Dr. Atul Thakare</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1158203077#gid=1158203077">Prof. Dr. Chandrashekhar Goswami</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=413778811#gid=413778811">Prof. Dr. Dhanraj Dhotre</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=818675080#gid=818675080">Prof. Dr. Dipti Patil</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=1592932173#gid=1592932173">Prof. Dr. Disha Gabhane</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=893252888#gid=893252888">Prof. Dr. Ganesh R. Pathak</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=271074831#gid=271074831">Prof. Dr. Harikumar Palani</option>
+                <option value="https://docs.google.com/spreadsheets/d/1KbU23lg-RT1n_zuWGHfc5JS_IX5h60f-PGRbWeg0RjY/edit?gid=1438831762#gid=1438831762">Prof. Dr. Hyder Ali Hingoliwala</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=2019785555#gid=2019785555">Prof. Dr. Indrabhan S. Borse</option>
+                <option value="https://docs.google.com/spreadsheets/d/1KbU23lg-RT1n_zuWGHfc5JS_IX5h60f-PGRbWeg0RjY/edit?gid=332062355#gid=332062355">Prof. Dr. Jagannath Nalavade</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1574315655#gid=1574315655">Prof. Dr. Jayashree Rajesh Prasad</option>
+                <option value="https://docs.google.com/spreadsheets/d/1KbU23lg-RT1n_zuWGHfc5JS_IX5h60f-PGRbWeg0RjY/edit?gid=1775572269#gid=1775572269">Prof. Dr. Madhukar Nimbalkar</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=803051381#gid=803051381">Prof. Dr. Mansi Bhonsle</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1768983425#gid=1768983425">Prof. Dr. Mayura Vishal Shelke</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1471791133#gid=1471791133">Prof. Dr. Nagesh Narayan Jadhav</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=838670933#gid=838670933">Prof. Dr. Nandkishor P Karlekar</option>
+                <option value="https://docs.google.com/spreadsheets/d/1KbU23lg-RT1n_zuWGHfc5JS_IX5h60f-PGRbWeg0RjY/edit?gid=2092716902#gid=2092716902">Prof. Dr. Nandkumar Kulkarni</option>
+                <option value="https://docs.google.com/spreadsheets/d/1KbU23lg-RT1n_zuWGHfc5JS_IX5h60f-PGRbWeg0RjY/edit?gid=1636807578#gid=1636807578">Prof. Dr. Neha Gupta</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=1551393483#gid=1551393483">Prof. Dr. Nilima Ramteke</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=788561432#gid=788561432">Prof. Dr. Nilima Vijayrao Kulkarni</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=2139373916#gid=2139373916">Prof. Dr. Nitin Sudam More</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=2010358673#gid=2010358673">Prof. Dr. Pankaj Chandre</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=443534791#gid=443534791">Prof. Dr. Pathan Mohd. Shafi</option>
+                <option value="https://docs.google.com/spreadsheets/d/1KbU23lg-RT1n_zuWGHfc5JS_IX5h60f-PGRbWeg0RjY/edit?gid=2035161657#gid=2035161657">Prof. Dr. Prasenjeet Patil</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=1029953899#gid=1029953899">Prof. Dr. Prashant Dhotre</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=916092458#gid=916092458">Prof. Dr. Rajani Sangappa Sajjan</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=650507266#gid=650507266">Prof. Dr. Rajendra Pawar</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1230281772#gid=1230281772">Prof. Dr. Rajesh S. Prasad</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=235804291#gid=235804291">Prof. Dr. Ranjana Kale</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=2000041072#gid=2000041072">Prof. Dr. Rashmi S Nair</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1489071015#gid=1489071015">Prof. Dr. Reena Dinesh Pagare</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=974503740#gid=974503740">Prof. Dr. Reena Gunjan</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=127701880#gid=127701880">Prof. Dr. Rohit Pachlor</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=353752377#gid=353752377">Prof. Dr. Sagar Tambe</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=429306315#gid=429306315">Prof. Dr. Saiprasad Potharaju</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1972324867#gid=1972324867">Prof. Dr. Saleha Saudagar</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1340070546#gid=1340070546">Prof. Dr. Sharon Christa</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1006540704#gid=1006540704">Prof. Dr. Shraddha P.Phansalkar</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=730282590#gid=730282590">Prof. Dr. Sumit Hirve</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1344484944#gid=1344484944">Prof. Dr. Sunita Parinam</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=897382728#gid=897382728">Prof. Dr. Suvarna Joshi</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1137198208#gid=1137198208">Prof. Dr. Suvarna Pawar</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1842487510#gid=1842487510">Prof. Dr. Umang Garg</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=1573069106#gid=1573069106">Prof. Gauri Desai</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=2011182366#gid=2011182366">Prof. Gayatri Jagande</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=684692921#gid=684692921">Prof. Gurunath Waghale</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1426442300#gid=1426442300">Prof. Hanumant Aba Pawar</option>
+                <option value="https://docs.google.com/spreadsheets/d/1KbU23lg-RT1n_zuWGHfc5JS_IX5h60f-PGRbWeg0RjY/edit?gid=1891675617#gid=1891675617">Prof. Harshad Lokhande</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1472968117#gid=1472968117">Prof. Hemant Shinde</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=779317100#gid=779317100">Prof. Hemant Tajanpure</option>
+                <option value="https://docs.google.com/spreadsheets/d/1KbU23lg-RT1n_zuWGHfc5JS_IX5h60f-PGRbWeg0RjY/edit?gid=1071362132#gid=1071362132">Prof. Himanshi Agrawal</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=841161735#gid=841161735">Prof. Jyoti Gavhane</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=44050873#gid=44050873">Prof. Kamlesh Nagware</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=2025712536#gid=2025712536">Prof. Kanchan Wankhade</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1830390101#gid=1830390101">Prof. khushal Kunjir</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=250630755#gid=250630755">Prof. Kiran Shinde</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=1602851059#gid=1602851059">Prof. Komal Munde</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=619682910#gid=619682910">Prof. Manisha Galphade</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1883810276#gid=1883810276">Prof. Manisha Shitole</option>
+                <option value="https://docs.google.com/spreadsheets/d/1KbU23lg-RT1n_zuWGHfc5JS_IX5h60f-PGRbWeg0RjY/edit?gid=1921149459#gid=1921149459">Prof. Manoj Shinde</option>
+                <option value="https://docs.google.com/spreadsheets/d/1KbU23lg-RT1n_zuWGHfc5JS_IX5h60f-PGRbWeg0RjY/edit?gid=471830276#gid=471830276">Prof. Moushmee Kuri</option>
+                <option value="https://docs.google.com/spreadsheets/d/1KbU23lg-RT1n_zuWGHfc5JS_IX5h60f-PGRbWeg0RjY/edit?gid=355087530#gid=355087530">Prof. Mr. Nitin Alzende</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=1572978097#gid=1572978097">Prof. Namrata Naikwade</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=876576429#gid=876576429">Prof. Neha Vinod Chaube</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1773104987#gid=1773104987">Prof. Nilesh Kulal</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=642293871#gid=642293871">Prof. Nilesh Thorat</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=1170971474#gid=1170971474">Prof. Pooja Kadam</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=1649216387#gid=1649216387">Prof. Pooja Oza</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=1584946882#gid=1584946882">Prof. Pramod Ghatage</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=1575685040#gid=1575685040">Prof. Pramod Yelam</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=1629043060#gid=1629043060">Prof. Prashant M. Yelmar</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=1030036548#gid=1030036548">Prof. Prashik Rawale</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=1980903220#gid=1980903220">Prof. Pratik Kamble</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1956011650#gid=1956011650">Prof. Pratiksha Dhande</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=2101537477#gid=2101537477">Prof. Pravin Pawar</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1602472400#gid=1602472400">Prof. Preeti Mulay</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=251844981#gid=251844981">Prof. Priyanka Gaikwad</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1074616653#gid=1074616653">Prof. Rahul Bembade</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=706280089#gid=706280089">Prof. Rahul More</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=474264643#gid=474264643">Prof. Rashmi Tundalwar</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1796140131#gid=1796140131">Prof. Ravi Chaudhari</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=465926311#gid=465926311">Prof. Renuka Pramod Arbat</option>
+                <option value="https://docs.google.com/spreadsheets/d/1KbU23lg-RT1n_zuWGHfc5JS_IX5h60f-PGRbWeg0RjY/edit?gid=2076337487#gid=2076337487">Prof. Rohidas Sangore</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=392391847#gid=392391847">Prof. Rohini Ingale</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=333399245#gid=333399245">Prof. Ruchita Sharma</option>
+                <option value="https://docs.google.com/spreadsheets/d/1KbU23lg-RT1n_zuWGHfc5JS_IX5h60f-PGRbWeg0RjY/edit?gid=729354209#gid=729354209">Prof. Saba Anjum Patel</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=228157599#gid=228157599">Prof. Sachin Jagadale</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=919660202#gid=919660202">Prof. Sachin Kolekar</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=919660202#gid=919660202">Prof. Sachin Kolekar</option>
+                <option value="https://docs.google.com/spreadsheets/d/1KbU23lg-RT1n_zuWGHfc5JS_IX5h60f-PGRbWeg0RjY/edit?gid=847326743#gid=847326743">Prof. Sanjay Ghodechor</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=717227007#gid=717227007">Prof. Savitri Chougule</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1031890355#gid=1031890355">Prof. Shahin Makubhai</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=501958747#gid=501958747">Prof. Shashikant Waghule</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1735822479#gid=1735822479">Prof. Shilpa Manish Dhopte</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=464293765#gid=464293765">Prof. Shraddha Kashid</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=509237991#gid=509237991">Prof. Shrikant Narhari Dhage</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=45432797#gid=45432797">Prof. Shruti Tilwant</option>
+                <option value="https://docs.google.com/spreadsheets/d/1KbU23lg-RT1n_zuWGHfc5JS_IX5h60f-PGRbWeg0RjY/edit?gid=2079614215#gid=2079614215">Prof. Shubhra Mathur</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=1673828500#gid=1673828500">Prof. Shweta Yadav</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1389751840#gid=1389751840">Prof. Smita Gumaste</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=604283481#gid=604283481">Prof. Sneha Kishor Deshmukh</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=380390751#gid=380390751">Prof. Sneha Singha</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1683048679#gid=1683048679">Prof. Sonali Deshpande</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1492632493#gid=1492632493">Prof. Sujit Jagtap</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=309313496#gid=309313496">Prof. Supriya C. Jadhav</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1092677019#gid=1092677019">Prof. Suresh Kapare</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=1273252588#gid=1273252588">Prof. Suruchi Deshmukh</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1246263940#gid=1246263940">Prof. Sushant Shirbhate</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=328717695#gid=328717695">Prof. Sushma Deepak Mehetre</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=842910144#gid=842910144">Prof. Swapnil Hiralal Chaudhari</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=548313166#gid=548313166">Prof. Swapnil Patil</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=273113951#gid=273113951sss">Prof. Swati Powar</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=299354393#gid=299354393">Prof. Tejaswini Bhosale</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=1504546153#gid=1504546153">Prof. Trupti Kudale</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=777257956#gid=777257956">Prof. Tushar Mane</option>
+                <option value="https://docs.google.com/spreadsheets/d/1KbU23lg-RT1n_zuWGHfc5JS_IX5h60f-PGRbWeg0RjY/edit?gid=325654116#gid=325654116">Prof. Uday A. Mande</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=827109127#gid=827109127">Prof. Umesh Gatkal</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=903434405#gid=903434405">Prof. Vaibhav Sawalkar</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1997959930#gid=1997959930">Prof. Vijaya Samadhan Patil</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1641259114#gid=1641259114">Prof. Vikas Katakdound</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=2115425941#gid=2115425941">Prof. Vikas S More</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=1270101817#gid=1270101817">Prof. Vilas Khedekar</option>
+                <option value="https://docs.google.com/spreadsheets/d/1FF_xZBVKn4GgiZf_8hygFf1mvMoR3G9u/edit?gid=272277316#gid=272277316">Prof. Viresh Vanarote</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=1926501472#gid=1926501472">Prof. Vishal Maloji Patil</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=612386927#gid=612386927">Prof. Vrushali Kondhalkar</option>
+                <option value="https://docs.google.com/spreadsheets/d/1KbU23lg-RT1n_zuWGHfc5JS_IX5h60f-PGRbWeg0RjY/edit?gid=1973538369#gid=1973538369">Prof. Yuvraj Ganpat Nikam</option>
+                <option value="https://docs.google.com/spreadsheets/d/17pudWs2PDog12OFMxn8viRC1Mi9cgOeF/edit?gid=39906693#gid=39906693">Visting XYZ</option>
+
+            </select>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2024 MIT ADT University - School of Computing</p>
+        <p>
+            <a href="https://mituniversity.ac.in/privacy-policy/">Privacy Policy</a> |
+            <a href="https://mituniversity.ac.in/terms-of-use/">Terms of Use</a>
+        </p>
+    </footer>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.11/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+     
+    <script>
+        function showPrograms() {
+            document.getElementById('main-cards').style.display = 'none';
+            document.getElementById('program-cards').style.display = 'grid';
+            document.getElementById('back-button').style.display = 'block';
+        }
+
+        function showIndividualTT() {
+            document.getElementById('main-cards').style.display = 'none';
+            document.getElementById('faculty-dropdown').style.display = 'block';
+            document.getElementById('back-button').style.display = 'block';
+        }
+
+        function showLabWiseTT() {
+            document.getElementById('main-cards').style.display = 'none';
+            document.getElementById('labwise-dropdown').style.display = 'block';
+            document.getElementById('back-button').style.display = 'block';
+        }
+
+        function showClassroomWiseTT() {
+            document.getElementById('main-cards').style.display = 'none';
+            document.getElementById('classroomwise-dropdown').style.display = 'block';
+            document.getElementById('back-button').style.display = 'block';
+        }
+
+        function showBTechYears() {
+            document.getElementById('program-cards').style.display = 'none';
+            document.getElementById('btech-cards').style.display = 'grid';
+        }
+
+        function showMTechYears() {
+            document.getElementById('program-cards').style.display = 'none';
+            document.getElementById('mtech-cards').style.display = 'grid';
+        }
+
+        function showMSCYears() {
+            document.getElementById('program-cards').style.display = 'none';
+            document.getElementById('msc-cards').style.display = 'grid';
+        }
+
+        function showSYBTechDropdown() {
+            document.getElementById('btech-cards').style.display = 'none';
+            document.getElementById('sybtech-dropdown').style.display = 'block';
+        }
+
+        function showTYBTechDropdown() {
+            document.getElementById('btech-cards').style.display = 'none';
+            document.getElementById('tybtech-dropdown').style.display = 'block';
+        }
+
+        function showLYBTechDropdown() {
+            document.getElementById('btech-cards').style.display = 'none';
+            document.getElementById('lybtech-dropdown').style.display = 'block';
+        }
+
+        function showFYMTechDropdown() {
+            document.getElementById('mtech-cards').style.display = 'none';
+            document.getElementById('fymtech-dropdown').style.display = 'block';
+        }
+
+        function showSYMTechDropdown() {
+            document.getElementById('mtech-cards').style.display = 'none';
+            document.getElementById('symtech-dropdown').style.display = 'block';
+        }
+
+        function showFYMSCDropdown() {
+            document.getElementById('msc-cards').style.display = 'none';
+            document.getElementById('fymsc-dropdown').style.display = 'block';
+        }
+
+        function showSYMSCDropdown() {
+            document.getElementById('msc-cards').style.display = 'none';
+            document.getElementById('symsc-dropdown').style.display = 'block';
+        }
+
+        function goBack() {
+            // Hide all dropdowns and show the main cards again
+            document.querySelectorAll('select').forEach(select => select.parentElement.style.display = 'none');
+            document.getElementById('program-cards').style.display = 'none';
+            document.getElementById('btech-cards').style.display = 'none';
+            document.getElementById('mtech-cards').style.display = 'none';
+            document.getElementById('msc-cards').style.display = 'none';
+            document.getElementById('main-cards').style.display = 'grid';
+            document.getElementById('back-button').style.display = 'none';
+        }
+
+        function handleDropdownChange(select) {
+            const selectedValue = select.value;
+            if (selectedValue) {
+                window.open(selectedValue, '_blank');
+            }
+        }
+    </script>
+</body>
+
+</html>
